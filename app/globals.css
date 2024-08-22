@@ -3,31 +3,91 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+  --dark-bg: white;
+}
+main {
+  z-index: 5;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+.dark::before {
+  position: absolute;
+  right: 0;
+  top: 0;
+  content: "";
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  opacity: 20%;
+  background: #000000;
+  filter: url(#noiseFilter);
+  pointer-events: none;
+}
+
+.dark {
+  background-color: var(--dark-bg);
+  height: 100%;
+  width: 100%;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 100px;
+}
+
+svg {
+  position: absolute;
+  z-index: -1;
+}
+
+.vertical-text {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+}
+
+.chapter-selected::before,
+.subchapter-selected::before {
+  content: "";
+  position: absolute;
+  right: -8rem;
+  top: 50%;
+  transform: translateY(-50%) scale(0.5);
+  width: 6rem;
+  height: 6rem;
+  background-color: white;
+  border-radius: 50%;
+  opacity: 0;
+  animation: fadeIn 0.5s forwards;
+  animation-delay: 0.3s;
+}
+
+@keyframes fadeIn {
+  from {
+    transform: translateY(-50%) scale(0.5);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(-50%) scale(1);
+    opacity: 1;
   }
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20rem); /* Initial hidden state */
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0); /* Final state */
+  }
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+.hidden {
+  opacity: 0;
+  transform: translateY(20rem); /* Initial hidden state */
+}
+
+.slide-up {
+  animation: slideUp 0.8s ease-out forwards; /* Animation */
 }

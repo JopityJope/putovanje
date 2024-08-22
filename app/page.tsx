@@ -1,112 +1,229 @@
+"use client";
+import { useState, useEffect, useRef } from "react";
+import contents from "../data/contents"; // Import your contents data
+
 import Image from "next/image";
 
 export default function Home() {
+  const [selectedChapter, setSelectedChapter] = useState<string | null>(null);
+  const [selectedSubChapter, setSelectedSubChapter] = useState<string | null>(
+    null
+  );
+  /*   const [animate, setAnimate] = useState<boolean>(false);
+  const previousDisplayedChapter = useRef<string | null>(null); // Store previous displayed chapter */
+
+  // Function to find the chapter for a given subchapter
+  const getChapterForSubChapter = (subChapterTitle: string) => {
+    for (const chapter of contents) {
+      if (
+        chapter.subchapters &&
+        chapter.subchapters.some((sub) => sub.title === subChapterTitle)
+      ) {
+        return chapter.title;
+      }
+    }
+    return null;
+  };
+
+  const handleChapterClick = (chapterTitle: string) => {
+    setSelectedChapter(chapterTitle);
+    setSelectedSubChapter(null); // Reset sub-chapter when a chapter is selected
+  };
+
+  const handleSubChapterClick = (subChapterTitle: string) => {
+    setSelectedSubChapter(subChapterTitle);
+    setSelectedChapter(null); // Reset chapter when a sub-chapter is selected
+  };
+
+  // Determine what to display in h3
+  const displayedChapter = selectedSubChapter
+    ? getChapterForSubChapter(selectedSubChapter)
+    : selectedChapter;
+
+  /*   useEffect(() => {
+    if (previousDisplayedChapter.current !== displayedChapter) {
+      // If displayedChapter has changed, trigger the animation
+      setAnimate(true);
+      previousDisplayedChapter.current = displayedChapter; // Update the previous chapter
+    }
+  }, [displayedChapter]);  */
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:size-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+    <main className="flex min-h-screen flex-col bg-background overflow-hidden relative">
+      <div className="dark" />
+      <svg>
+        <filter id="noiseFilter">
+          <feTurbulence
+            type="turbulence"
+            baseFrequency="0.2"
+            stitchTiles="stitch"
+          />
+        </filter>
+      </svg>
+      <div className="flex flex-col justify-between text-text w-1/5 flex-grow border-r-[2px] border-text px-[5rem] py-[10rem]">
+        <h1 className="text-[6.4rem] font-[300] tracking-[.08rem] select-none italic">
+          Србија на мапи <br /> европских путника
+        </h1>
+        {contents && (
+          <div className="flex flex-col gap-[2rem] italic">
+            {contents.map((chapter, index) => (
+              <div key={index}>
+                <h2
+                  className={`text-[5.6rem] font-[300] tracking-[.08rem] select-none cursor-pointer relative  h-[8.5rem] ${
+                    selectedChapter === chapter.title ? "chapter-selected" : ""
+                  }`}
+                  onClick={() => handleChapterClick(chapter.title)}
+                >
+                  <span className="text-[5.6rem] font-bold text-textNumbers pr-[2rem] ">
+                    {index.toString().padStart(2, "0")}
+                  </span>
+                  {chapter.title}
+                </h2>
+                {chapter.subchapters && chapter.subchapters.length > 0 && (
+                  <div className="flex flex-col gap-[2rem] ml-[10rem] mt-[2rem]">
+                    {chapter.subchapters.map((subChapter, subIndex) => (
+                      <h3
+                        key={subIndex}
+                        className={`text-[4.6rem] font-[300] tracking-[.08rem] select-none cursor-pointer relative  h-[8.5rem] ${
+                          selectedSubChapter === subChapter.title
+                            ? "subchapter-selected"
+                            : ""
+                        }`}
+                        onClick={() => handleSubChapterClick(subChapter.title)}
+                      >
+                        {subChapter.title}
+                      </h3>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div>
+        <div>
+          {/*  {displayedChapter && (
+            <h3
+              className={`text-[17rem] absolute top-[35rem] right-[15rem] vertical-text ${
+                animate ? "slide-up" : ""
+              }`}
+              onAnimationEnd={() => setAnimate(false)} // Reset animation state
+            >
+              {displayedChapter}
+            </h3>
+          )}
+          {selectedSubChapter && (
+            <h4 className="text-[11rem] absolute top-[35rem] left-[95rem] vertical-text rotate-180 font-[500]">
+              {selectedSubChapter}
+            </h4>
+          )} */}
+
+          {displayedChapter && (
+            <h3
+              className={`text-[15rem] absolute top-[30rem] right-[15rem] vertical-text`}
+            >
+              <span className="text-[15rem] font-bold text-textNumbers pr-[2rem] pb-[5rem]">
+                2
+              </span>
+              {displayedChapter}
+            </h3>
+          )}
+          {selectedSubChapter && (
+            <h4 className="text-[12rem] absolute top-[30rem] left-[95rem] vertical-text rotate-180 font-[500]">
+              <span className="text-[12rem] font-bold text-textNumbers pr-[2rem] pb-[5rem]">
+                2.3
+              </span>
+              {selectedSubChapter}
+            </h4>
+          )}
         </div>
-      </div>
 
-      <div className="relative z-[-1] flex place-items-center before:absolute before:h-[300px] before:w-full before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 sm:before:w-[480px] sm:after:w-[240px] before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
+        <div className="flex absolute top-[30rem] left-[130rem] text-[2rem] font-raleway text-[3.4rem] w-[200rem]">
+          <div>
+            <Image
+              alt="logo"
+              src={"/assets/2_3/01.jpg"}
+              width={950}
+              height={800}
+              className="ml-[15rem] mt-[10rem]"
+            ></Image>
+            <p className="text-[3.9rem] w-[90rem] font-[300] leading-loose tracking-wide pt-[5rem] opacity-95">
+              Мотив мешања цивилизација у делима европских путописаца посебно је
+              долазио до изражаја у случају описа српских градова. Најбољи
+              пример био је свакако Београд, који је за већину странаца
+              представљао почетну станицу на походу кроз Србију.
+            </p>
+          </div>
 
-      <div className="mb-32 grid text-center lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Docs{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
+          <div className="w-[90rem] pl-[20rem] pt-[25rem] flex flex-col gap-[15rem]">
+            <div>
+              <div className="flex gap-[3rem] items-end pb-[4rem]">
+                <Image
+                  alt="logo"
+                  src={"/assets/ikone/feather.svg"}
+                  width={70}
+                  height={70}
+                  className="opacity-95 "
+                ></Image>
+                <p className="font-[600]">Сигфрид Капер о Београду 1850.</p>
+              </div>
 
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Learn{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
+              <p className="italic font-bodoniModa opacity-95 text-[3.7rem] leading-[6.3rem]">
+                <span className="text-[6rem] leading-[5rem]">„ </span>
+                Овде се додирује историја (Османлија) која сада своје последње
+                улоге одиграва (…) (и) она друга, која тек ступа у круг светских
+                догађаја. На Београду се види да је то варош где се додирују
+                умирање и поновно оживљавање, пропаст и подизање, прошлост и
+                будућност. (…) Уз стари застој примећује се нови напредак.
+                <span className="text-[6rem] leading-[5rem]"> ”</span>
+              </p>
+            </div>
 
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Templates{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Explore starter templates for Next.js.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Deploy{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-balance text-sm opacity-50">
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
+            <div>
+              <div className="flex gap-[3rem] items-end pb-[4rem]">
+                <Image
+                  alt="logo"
+                  src={"/assets/ikone/feather.svg"}
+                  width={70}
+                  height={70}
+                  className="opacity-95 "
+                ></Image>
+                <p className="font-[600] ">Вилијам Дентон о Београду 1862.</p>
+              </div>
+              <p className="italic font-bodoniModa opacity-95 text-[3.7rem] leading-[6.3rem]">
+                <span className="text-[6rem] leading-[5rem]">„ </span>
+                Јединствена мешавина оријенталног и западног живота појавила се
+                преда мном. Многе сцене и звуци су ме уверавали да нисам у
+                потпуно муслиманској земљи, (али) мешали су се са другим, који
+                су ми говорили да сам на предстражи Турске империје.
+                <span className="text-[6rem] leading-[5rem]"> ”</span>
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="flex items-center absolute bottom-[6rem] left-[50%]">
+          <Image
+            alt="logo"
+            src={"/assets/ikone/left.svg"}
+            width={100}
+            height={100}
+            className="opacity-50 "
+          ></Image>
+          <div className="flex text-[5.5rem] gap-[3rem] px-[5rem]">
+            <p>06</p>
+            <p className="opacity-50">|</p>
+            <p className="opacity-50">23</p>
+          </div>
+          <Image
+            alt="logo"
+            src={"/assets/ikone/right.svg"}
+            width={100}
+            height={100}
+            className="opacity-50 "
+          ></Image>
+        </div>
       </div>
     </main>
   );
